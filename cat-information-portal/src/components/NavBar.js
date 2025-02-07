@@ -4,10 +4,10 @@ function NavBar() {
     return (
         <Nav variant="tabs" defaultActiveKey="/home">
             <Nav.Item>
-                <Nav.Link href="/home">Home</Nav.Link>
+                <Nav.Link href="/">Home</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-                <Nav.Link eventKey="link-1">Cat Food</Nav.Link>
+                <Nav.Link href="/breeds">Cat Breeds</Nav.Link>
             </Nav.Item>
             <Nav.Item>
                 <Nav.Item>

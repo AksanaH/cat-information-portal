@@ -1,7 +1,8 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from './components/NavBar'
 import AboutCats from './components/AboutCatsSection'
-import Search from './components/Search'
-import RandomCat from './components/RandomCat';
+
+import CatBreeds from "./components/CatBreedsPage";
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styled from "styled-components";
@@ -9,15 +10,17 @@ import styled from "styled-components";
 
 function App() {
   return (
-    <StyledApp>
-      <NavBar />
-      <StyledBody>
-        <AboutCats />
-        <Search />
-        <RandomCat />
-      </StyledBody>
-
-    </StyledApp>
+    <Router>
+      <StyledApp>
+        <NavBar />
+        <StyledBody>
+          <Routes>
+            <Route path="/" element={<AboutCats />} />
+            <Route path="/breeds" element={<CatBreeds />} />
+          </Routes>
+        </StyledBody>
+      </StyledApp>
+    </Router>
   );
 }
 
