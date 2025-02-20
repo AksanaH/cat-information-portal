@@ -10,28 +10,12 @@ class CatService {
         return await res.json();
     }
 
-    getAllCats = async () => {
-        try {
-            const response = await fetch(`https://api.thecatapi.com/v1/images/search?limit=10&${this._apiKey}`);
-            if (!response.ok) throw new Error("Failed to fetch cats");
-
-            const res = await response.json();
-            console.log("API Response all cats:", res); // Debugging
-
-            return res.map(cat => {
-
-                return this._transformCat(res)
-            });
-
-        } catch (error) {
-            console.error("Error fetching cats:", error);
-            return [];
-        }
+    getAllCats = () => {
+        return fetch(`https://api.thecatapi.com/v1/images/search?has_breeds=1&limit=12&${this._apiKey}`)
+            .then(res => res.json())
+            .then(res => res.map(cat => this._transformCat(cat)))
+            .catch(error => new Error("Failed to fetch cats"))
     };
-
-    // getBengalCats = () => {
-    //     return this.getResource(`https://api.thecatapi.com/v1/images/search?breed_ids=beng&limit=100&${this._apiKey}`)
-    // }
 
     getRandomCat = async () => {
         try {
@@ -39,23 +23,33 @@ class CatService {
             if (!res || res.length === 0) {
                 throw new Error("Empty response from API");
             }
-            return this._transformCat(res);
+            return this._transformCat(res[0]);
         } catch (error) {
             console.error("getRandomCat error:", error);
             throw error; // Ensure the error propagates to the `.catch()`
         }
     };
 
-    _transformCat = (res) => {
-        const breedInfo = res[0].breeds && res[0].breeds.length > 0 ? res[0].breeds[0] : null;
-        return {
-            breed: breedInfo ? breedInfo.name : "Unknown Breed",
-            temperament: breedInfo ? breedInfo.temperament : "N/A",
-            wiki: breedInfo ? breedInfo.wikipedia_url : "#",
-            image: res[0].url || ""
+    _transformCat = (cat) => {
+        if (!cat || !cat.breeds || cat.breeds.length === 0) {
+            return {
+                breed: "Unknown Breed",
+                temperament: "N/A",
+                wiki: "#",
+                image: cat?.url || ""
+            };
         }
-    }
+
+        const breedInfo = cat.breeds[0]; // Extract the first breed
+        return {
+            breed: breedInfo.name,
+            temperament: breedInfo.temperament,
+            wiki: breedInfo.wikipedia_url || "#",
+            image: cat.url || ""
+        };
+    };
+
 
 }
 
-export default CatService;
+export default new CatService();

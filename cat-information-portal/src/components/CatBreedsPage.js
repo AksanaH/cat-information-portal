@@ -1,10 +1,9 @@
 import { Component } from 'react';
 
 import styled from "styled-components";
-import Card from 'react-bootstrap/Card';
 import CardGroup from 'react-bootstrap/CardGroup';
-import CatService from '../services/CatService';
 import CatItem from './CatItem';
+import catService from '../services/CatService';
 
 class CatBreeds extends Component {
     state = {
@@ -13,10 +12,8 @@ class CatBreeds extends Component {
         error: false
     }
 
-    catService = new CatService();
-
     componentDidMount() {
-        this.catService.getAllCats()
+        catService.getAllCats()
             .then(this.onCatListLoaded)
             .catch(this.onError)
     }
@@ -57,9 +54,10 @@ class CatBreeds extends Component {
 }
 
 const StyledAboutCatsSection = styled(CardGroup)`
-  max-width: 40%;
+  max-width: 50%;
   display: flex;
   flex-wrap: wrap;
+  /* justify-content: space-around; */
 `;
 
 export default CatBreeds;

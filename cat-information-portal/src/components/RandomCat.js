@@ -1,9 +1,10 @@
 import { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import CatService from '../services/CatService';
+import catService from '../services/CatService';
 import SpinnerLoading from './Spinner';
 import ErrorMessage from './ErrorMessage';
+import styled from "styled-components";
 
 class RandomCat extends Component {
     state = {
@@ -11,16 +12,9 @@ class RandomCat extends Component {
         loading: true,
         error: false
     }
-    catService = new CatService();
-    _isMounted = false;
 
     componentDidMount() {
-        this._isMounted = true;
         this.updateCat();
-    }
-
-    componentWillUnmount() {
-        this._isMounted = false;
     }
 
     onCatLoaded = (cat) => {
@@ -31,11 +25,6 @@ class RandomCat extends Component {
         this.setState({ cat, loading: false, error: false });
     };
 
-    onCatLoading = () => {
-        if (this._isMounted) {
-            this.setState({ loading: true });
-        }
-    }
 
     onError = () => {
         console.error("Error fetching cat!");
@@ -44,10 +33,10 @@ class RandomCat extends Component {
         });
     };
 
-    updateCat = (id) => {
-        this.onCatLoading();
-        this.catService
-            .getRandomCat(id)
+    updateCat = () => {
+        this.setState({ loading: true });
+        catService
+            .getRandomCat()
             .then((cat) => {
                 console.log("Cat loaded successfully:", cat);
                 this.onCatLoaded(cat);
@@ -76,13 +65,18 @@ class RandomCat extends Component {
         ) : null;
 
         return (
-            <Card style={{ width: '18rem' }}>
+            <StyledCatCard >
                 {errorMessage && <ErrorMessage />}
                 {spinner}
                 {content}
-            </Card>
+            </StyledCatCard>
         );
     }
 }
+
+const StyledCatCard = styled(Card)`
+  width: 18rem;
+  margin:40px;
+`;
 
 export default RandomCat;
