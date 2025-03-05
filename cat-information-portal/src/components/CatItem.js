@@ -15,9 +15,6 @@ const CatItem = ({ cat }) => {
                         {cat.temperament}
                     </Card.Text>
                 </Card.Body>
-                <Card.Footer>
-                    <small className="text-muted">Last updated 3 mins ago</small>
-                </Card.Footer>
             </StyledCatItem>
         </div>
     )
@@ -28,10 +25,11 @@ const StyledCatItem = styled(Card)`
   min-width: 15rem;
   width: 15rem;
   margin:10px;
+  height: 25rem;
 `;
 
 const ImageWrapper = styled.div`
-  height: 17rem;
+  height: 16rem;
   
 `;
 

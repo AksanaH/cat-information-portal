@@ -76,7 +76,7 @@ class RandomCat extends Component {
 
 const StyledCatCard = styled(Card)`
   width: 18rem;
-  margin:40px;
+  margin:20px;
 `;
 
 export default RandomCat;

@@ -11,7 +11,7 @@ class CatService {
     }
 
     getAllCats = () => {
-        return fetch(`https://api.thecatapi.com/v1/images/search?has_breeds=1&limit=12&${this._apiKey}`)
+        return fetch(`https://api.thecatapi.com/v1/images/search?has_breeds=1&limit=6&${this._apiKey}`)
             .then(res => res.json())
             .then(res => res.map(cat => this._transformCat(cat)))
             .catch(error => new Error("Failed to fetch cats"))

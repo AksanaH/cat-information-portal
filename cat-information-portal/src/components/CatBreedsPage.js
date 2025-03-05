@@ -57,7 +57,6 @@ const StyledAboutCatsSection = styled(CardGroup)`
   max-width: 50%;
   display: flex;
   flex-wrap: wrap;
-  /* justify-content: space-around; */
 `;
 
 export default CatBreeds;
