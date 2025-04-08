@@ -10,7 +10,7 @@ class CatService {
         return await res.json();
     }
 
-    getAllCats = () => {
+    getAllCats = (offset = 0, limit = 6) => {
         return fetch(`https://api.thecatapi.com/v1/images/search?has_breeds=1&limit=6&${this._apiKey}`)
             .then(res => res.json())
             .then(res => res.map(cat => this._transformCat(cat)))

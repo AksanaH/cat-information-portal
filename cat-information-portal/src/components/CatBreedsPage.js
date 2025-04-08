@@ -4,20 +4,29 @@ import styled from "styled-components";
 import CardGroup from 'react-bootstrap/CardGroup';
 import CatItem from './CatItem';
 import catService from '../services/CatService';
+import NextButton from '../components/NextButton';
+import BackButton from '../components/BackButton';
+
 
 const CatBreeds = () => {
 
     const [catList, setCatList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [offset, setOffset] = useState(1);
+
+    const [catPages, setCatPages] = useState([]); // Array of catLists
+    const [pageIndex, setPageIndex] = useState(0);
+
 
     useEffect(() => {
-        updateCatList();
-    }, []);
+        onRequest(offset);
+    }, [])
 
-    const onCatListLoaded = (catList) => {
-        setCatList(catList || []); // Ensure it's always an array
+    const onCatListLoaded = (newCats, newOffset) => {
+        setCatList(newCats || []);
         setLoading(false);
+        setOffset(newOffset);
     };
 
     const onError = () => {
@@ -25,18 +34,28 @@ const CatBreeds = () => {
         setLoading(false);
     }
 
-    const updateCatList = () => {
+    const onRequest = (newPageIndex) => {
         setLoading(true);
-        catService
-            .getAllCats()
-            .then((catList) => {
-                console.log("Cat breeds loaded successfully:", catList);
-                onCatListLoaded(catList);
+
+        // If we've already fetched this page, just use it
+        if (catPages[newPageIndex]) {
+            setCatList(catPages[newPageIndex]);
+            setPageIndex(newPageIndex);
+            setLoading(false);
+            return;
+        }
+
+        // Otherwise fetch new data
+        catService.getAllCats()
+            .then((cats) => {
+                const updatedPages = [...catPages];
+                updatedPages[newPageIndex] = cats;
+                setCatPages(updatedPages);
+                setCatList(cats);
+                setPageIndex(newPageIndex);
+                setLoading(false);
             })
-            .catch((error) => {
-                console.error("Fetching error:", error);
-                onError();
-            });
+            .catch(onError);
     };
 
     if (loading) {
@@ -48,11 +67,15 @@ const CatBreeds = () => {
     }
 
     return (
-        <StyledAboutCatsSection>
-            {catList.map((cat, index) => (
-                <CatItem key={index} cat={cat} /> // Map through catList to render CatItem for each cat
-            ))}
-        </StyledAboutCatsSection>
+        <>
+            <StyledAboutCatsSection>
+                {catList.map((cat, index) => (
+                    <CatItem key={index} cat={cat} /> // Map through catList to render CatItem for each cat
+                ))}
+            </StyledAboutCatsSection>
+            <BackButton onClick={() => onRequest(pageIndex - 1)} />
+            <NextButton onClick={() => onRequest(pageIndex + 1)} />
+        </>
 
     );
 }
